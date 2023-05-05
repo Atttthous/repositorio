@@ -1,0 +1,65 @@
+
+
+
+
+
+
+# Comprobar si el módulo de OpenSSH Server ya está instalado
+if ((Get-WindowsCapability -Online | Where-Object Name -Like 'OpenSSH.Server*').State -eq 'Installed') {
+    Write-Host "El módulo de OpenSSH Server ya está instalado."
+    return
+}
+
+# Instalar el módulo de OpenSSH Server
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
+# Iniciar el servicio de OpenSSH Server
+Start-Service sshd
+
+# Establecer el servicio de OpenSSH Server para que se inicie automáticamente
+Set-Service -Name sshd -StartupType 'Automatic'
+
+Write-Host "Se ha instalado y configurado correctamente OpenSSH Server."
+
+@echo off
+
+sc config sshd start=auto
+net start sshd
+
+
+
+
+##
+@echo off
+
+REM Comprobar si el módulo de OpenSSH Server ya está instalado
+powershell -Command "& {if ((Get-WindowsCapability -Online | Where-Object Name -Like 'OpenSSH.Server*').State -eq 'Installed') { exit 0 } else { exit 1 }}" >nul
+if %errorlevel% equ 0 (
+    echo El módulo de OpenSSH Server ya está instalado.
+) else (
+    REM Instalar el módulo de OpenSSH Server
+    powershell -Command "Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0" >nul
+
+    REM Iniciar el servicio de OpenSSH Server
+    net start sshd >nul
+
+    REM Establecer el servicio de OpenSSH Server para que se inicie automáticamente
+    sc config sshd start=auto >nul
+
+    echo Se ha instalado y configurado correctamente OpenSSH Server.
+)
+
+REM Iniciar el servicio de OpenSSH Server y establecer para que se inicie automáticamente
+sc config sshd start=auto >nul
+net start sshd >nul
+
+##
+
+###
+
+desintalar:
+
+@echo off
+net stop sshd
+sc config sshd start=disabled
+
